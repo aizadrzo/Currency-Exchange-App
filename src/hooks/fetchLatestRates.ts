@@ -24,7 +24,6 @@ const fetchLatestRates = () => {
   return {
     getLatestRates,
     exchangeRates,
-    setExchangeRates,
   };
 };
 

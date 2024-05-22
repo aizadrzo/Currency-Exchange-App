@@ -1,5 +1,6 @@
 import fetchCurrencies from "./hooks/fetchLatestRates";
 import { ExchangeRates } from "./types";
+import { formatMoney } from "./utils";
 
 const App = () => {
   const { exchangeRates } = fetchCurrencies();
@@ -9,7 +10,7 @@ const App = () => {
       {exchangeRates?.length > 0 ? (
         exchangeRates?.map(({ currency, rate }: ExchangeRates) => (
           <p key={currency}>
-            {currency} : {rate}
+            {currency} : {formatMoney(currency, rate)}
           </p>
         ))
       ) : (

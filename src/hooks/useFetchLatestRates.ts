@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { ExchangeRates } from "../types";
 import { formatUrl } from "../utils";
+import { Currencies } from "../constants";
 
 const useFetchLatestRates = () => {
   const [amount, setAmount] = useState(1);
-  const [fromCurrency, setFromCurrency] = useState(null);
-  const [toCurrency, setToCurrency] = useState(null);
+  const [fromCurrency, setFromCurrency] = useState<
+    keyof typeof Currencies | null
+  >(null);
+  const [toCurrency, setToCurrency] = useState<keyof typeof Currencies | null>(
+    null
+  );
   const [exchangeRates, setExchangeRates] = useState<ExchangeRates[]>([]);
   const [error, setError] = useState<string | null>(null);
 

@@ -1,10 +1,4 @@
-import { ExchangeRates } from "./types";
-
-type formatUrl = {
-  amount: number;
-  fromCurrency: ExchangeRates["currency"];
-  toCurrency: ExchangeRates["currency"];
-};
+import { ExchangeRates, FormatUrl } from "./types";
 
 export const formatMoney = (
   currency: ExchangeRates["currency"] = "EUR",
@@ -16,7 +10,7 @@ export const formatMoney = (
   }).format(amount);
 };
 
-export const formatUrl = ({ amount, fromCurrency, toCurrency }: formatUrl) => {
+export const formatUrl = ({ amount, fromCurrency, toCurrency }: FormatUrl) => {
   const baseUrl = "https://api.frankfurter.app/latest";
   const params = new URLSearchParams();
 

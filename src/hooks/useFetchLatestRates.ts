@@ -4,13 +4,10 @@ import { formatUrl } from "../utils";
 import { Currencies } from "../constants";
 
 const useFetchLatestRates = () => {
-  const [amount, setAmount] = useState(1);
-  const [fromCurrency, setFromCurrency] = useState<
-    keyof typeof Currencies | null
-  >(null);
-  const [toCurrency, setToCurrency] = useState<keyof typeof Currencies | null>(
-    null
-  );
+  const [amount, setAmount] = useState(100);
+  const [fromCurrency, setFromCurrency] =
+    useState<keyof typeof Currencies>("EUR");
+  const [toCurrency, setToCurrency] = useState<keyof typeof Currencies>("USD");
   const [exchangeRates, setExchangeRates] = useState<ExchangeRates[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,11 +37,13 @@ const useFetchLatestRates = () => {
 
   return {
     error,
-    getLatestRates,
     exchangeRates,
     setFromCurrency,
     setAmount,
     setToCurrency,
+    fromCurrency,
+    toCurrency,
+    amount,
   };
 };
 

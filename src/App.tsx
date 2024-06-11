@@ -43,9 +43,13 @@ const App = () => {
         <input id="amount" type="number" {...register("amount")} />
         {/* fromCurrency */}
         <label htmlFor="fromCurrency">Currency</label>
-        <select {...register("fromCurrency")} defaultValue={fromCurrency}>
+        <select {...register("fromCurrency")}>
           {currencyList?.map(({ currency }) => (
-            <option key={currency} value={currency}>
+            <option
+              key={currency}
+              value={currency}
+              selected={currency === fromCurrency}
+            >
               {currency}
             </option>
           ))}
@@ -60,9 +64,13 @@ const App = () => {
           readOnly
         />
         <label htmlFor="toCurrency">Currency</label>
-        <select {...register("toCurrency")} defaultValue={toCurrency}>
+        <select {...register("toCurrency")}>
           {currencyList?.map(({ currency }) => (
-            <option key={currency} value={currency}>
+            <option
+              key={currency}
+              value={currency}
+              selected={currency === toCurrency}
+            >
               {currency}
             </option>
           ))}

@@ -15,3 +15,10 @@ export type FormatUrl = {
   fromCurrency: keyof typeof Currencies;
   toCurrency: keyof typeof Currencies;
 };
+
+export type FormValues = {
+  amount: number;
+  converted: number;
+  fromCurrency: keyof typeof Currencies;
+  toCurrency: keyof typeof Currencies;
+};

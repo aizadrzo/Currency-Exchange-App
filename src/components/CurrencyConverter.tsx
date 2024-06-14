@@ -4,8 +4,15 @@ import { useFetchCurrencyList, useFetchLatestRates } from "@/hooks";
 import { FormValues } from "@/types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Select, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { SelectContent } from "@radix-ui/react-select";
+import {
+  Select,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+} from "./ui/select";
 
 const CurrencyConverter = () => {
   const {
@@ -34,12 +41,15 @@ const CurrencyConverter = () => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-[350px] space-y-3 p-3"
+      >
+        <div className="flex gap-x-2">
           <FormField
             name="amount"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel>Amount</FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -57,23 +67,26 @@ const CurrencyConverter = () => {
                   <SelectTrigger>
                     <SelectValue>{field.value}</SelectValue>
                   </SelectTrigger>
-                  <SelectContent>
-                    {currencyList?.map(({ currency }) => (
-                      <SelectItem value={currency} key={currency}>
-                        {currency}
-                      </SelectItem>
-                    ))}
+                  <SelectContent className="bg-white">
+                    <SelectGroup>
+                      <SelectLabel>Currencies</SelectLabel>
+                      {currencyList?.map(({ currency, name }) => (
+                        <SelectItem value={currency} key={currency}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
               </FormItem>
             )}
           />
         </div>
-        <div>
+        <div className="flex gap-x-2">
           <FormField
             name="converted"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel>Converted Amount</FormLabel>
                 <FormControl>
                   <Input {...field} value={exchangeRates[0]?.rate} readOnly />
@@ -84,29 +97,31 @@ const CurrencyConverter = () => {
           <FormField
             name="toCurrency"
             control={form.control}
-            render={({ field }) => {
-              console.log(field);
-              return (
-                <FormItem>
-                  <FormLabel>Currency</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue>{field.value}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {currencyList?.map(({ currency }) => (
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Currency</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue>{field.value}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="bg-white">
+                    <SelectGroup>
+                      <SelectLabel>Currencies</SelectLabel>
+                      {currencyList?.map(({ currency, name }) => (
                         <SelectItem value={currency} key={currency}>
-                          {currency}
+                          {name}
                         </SelectItem>
                       ))}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              );
-            }}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
           />
         </div>
-        <Button type="submit">Convert</Button>
+        <Button type="submit" className="w-full">
+          Convert
+        </Button>
       </form>
     </Form>
   );

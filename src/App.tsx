@@ -3,8 +3,7 @@ import "./index.css";
 
 const App = () => {
   return (
-    <div>
-      <h1>Currency Converter</h1>
+    <div className="grid w-full h-full place-content-center">
       <CurrencyConverter />
     </div>
   );

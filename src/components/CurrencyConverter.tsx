@@ -13,6 +13,7 @@ import {
   SelectContent,
   SelectGroup,
 } from "./ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const CurrencyConverter = () => {
   const {
@@ -40,90 +41,98 @@ const CurrencyConverter = () => {
     setToCurrency(data.toCurrency);
   };
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-[350px] space-y-3 p-3"
-      >
-        <div className="flex gap-x-2">
-          <FormField
-            name="amount"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Amount</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="fromCurrency"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Currency</FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue>{field.value}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectGroup>
-                      <SelectLabel>Currencies</SelectLabel>
-                      {currencyList?.map(({ currency, name }) => (
-                        <SelectItem value={currency} key={currency}>
-                          {name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex gap-x-2">
-          <FormField
-            name="converted"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Converted Amount</FormLabel>
-                <FormControl>
-                  <Input {...field} value={exchangeRates[0]?.rate} readOnly />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="toCurrency"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Currency</FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue>{field.value}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectGroup>
-                      <SelectLabel>Currencies</SelectLabel>
-                      {currencyList?.map(({ currency, name }) => (
-                        <SelectItem value={currency} key={currency}>
-                          {name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
-        </div>
-        <Button type="submit" className="w-full">
-          Convert
-        </Button>
-      </form>
-    </Form>
+    <Card className="w-[350px] m-3">
+      <CardHeader>
+        <CardTitle>Checkout the Latest Rates</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 ">
+            <div className="flex gap-x-2">
+              <FormField
+                name="amount"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="fromCurrency"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue>{field.value}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectGroup>
+                          <SelectLabel>Currencies</SelectLabel>
+                          {currencyList?.map(({ currency, name }) => (
+                            <SelectItem value={currency} key={currency}>
+                              {name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex gap-x-2">
+              <FormField
+                name="converted"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Converted Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={exchangeRates[0]?.rate}
+                        readOnly
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="toCurrency"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue>{field.value}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectGroup>
+                          <SelectLabel>Currencies</SelectLabel>
+                          {currencyList?.map(({ currency, name }) => (
+                            <SelectItem value={currency} key={currency}>
+                              {name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              Convert
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

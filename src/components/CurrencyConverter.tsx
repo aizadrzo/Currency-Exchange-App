@@ -14,6 +14,17 @@ import {
   SelectGroup,
 } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Alert, AlertDescription } from "./ui/alert";
+import { InfoIcon } from "lucide-react";
+
+const DisclaimerMessage = () => (
+  <Alert>
+    <InfoIcon width={18} />
+    <AlertDescription>
+      Rates are for guidance; verify before making financial decisions.
+    </AlertDescription>
+  </Alert>
+);
 
 const CurrencyConverter = () => {
   const {
@@ -41,14 +52,14 @@ const CurrencyConverter = () => {
     setToCurrency(data.toCurrency);
   };
   return (
-    <Card className="w-[350px] m-3">
+    <Card>
       <CardHeader>
         <CardTitle>Checkout the Latest Rates</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 ">
-            <div className="flex gap-x-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <FormField
                 name="amount"
                 render={({ field }) => (
@@ -85,7 +96,7 @@ const CurrencyConverter = () => {
                 )}
               />
             </div>
-            <div className="flex gap-x-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <FormField
                 name="converted"
                 render={({ field }) => (
@@ -126,6 +137,7 @@ const CurrencyConverter = () => {
                 )}
               />
             </div>
+            <DisclaimerMessage />
             <Button type="submit" className="w-full">
               Convert
             </Button>

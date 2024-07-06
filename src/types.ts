@@ -11,7 +11,7 @@ export type CurrencyList = {
 };
 
 export type FormatUrl = {
-  amount: number;
+  amount: string;
   fromCurrency: keyof typeof Currencies;
   toCurrency: keyof typeof Currencies;
 };

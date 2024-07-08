@@ -16,11 +16,15 @@ export const formatMoney = (
   }).format(amount);
 };
 
-export const formatUrl = ({ amount, fromCurrency, toCurrency }: FormatUrl) => {
+export const formatUrl = ({
+  amount,
+  fromCurrency,
+  toCurrency,
+}: Partial<FormatUrl>) => {
   const baseUrl = "https://api.frankfurter.app/latest";
   const params = new URLSearchParams();
 
-  if (amount) params.append("amount", amount);
+  if (amount) params.append("amount", amount as unknown as string);
   if (fromCurrency) params.append("from", fromCurrency);
   if (toCurrency) params.append("to", toCurrency);
 

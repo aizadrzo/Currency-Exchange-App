@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ExchangeRates } from "../types";
-import { formatUrl } from "../utils";
+import { formatUrl } from "@/lib/utils";
 import { Currencies } from "../constants";
 
 const useFetchLatestRates = () => {

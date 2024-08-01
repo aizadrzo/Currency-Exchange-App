@@ -17,27 +17,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const CurrencyConverter = () => {
   const {
-    exchangeRates,
+    data: exchangeRates,
     setAmount,
-    setFromCurrency,
+    setBaseCurrency,
     setToCurrency,
-    fromCurrency,
+    baseCurrency,
     toCurrency,
     amount,
   } = useFetchLatestRates();
-  const { currencyList } = useFetchCurrencyList();
+  const { data: currencyList } = useFetchCurrencyList();
 
   const form = useForm<FormValues>({
     defaultValues: {
       amount,
       toCurrency,
-      fromCurrency,
+      baseCurrency,
     },
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     setAmount(data.amount);
-    setFromCurrency(data.fromCurrency);
+    setBaseCurrency(data.baseCurrency);
     setToCurrency(data.toCurrency);
   };
   return (
@@ -62,7 +62,7 @@ const CurrencyConverter = () => {
                   )}
                 />
                 <FormField
-                  name="fromCurrency"
+                  name="baseCurrency"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>

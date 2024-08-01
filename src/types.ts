@@ -12,13 +12,13 @@ export type CurrencyList = {
 
 export type FormatUrl = {
   amount: number;
-  fromCurrency: keyof typeof Currencies;
+  baseCurrency: keyof typeof Currencies;
   toCurrency: keyof typeof Currencies;
 };
 
 export type FormValues = {
   amount: number;
   converted: number;
-  fromCurrency: keyof typeof Currencies;
+  baseCurrency: keyof typeof Currencies;
   toCurrency: keyof typeof Currencies;
 };

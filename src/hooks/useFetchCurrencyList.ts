@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CurrencyList } from "../types";
 
 const useFetchCurrencyList = () => {
-  const [currencyList, setCurrencyList] = useState<CurrencyList[]>([]);
+  const [data, setData] = useState<CurrencyList[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const getCurrencyList = async () => {
@@ -13,7 +13,7 @@ const useFetchCurrencyList = () => {
         currency,
         name,
       }));
-      setCurrencyList(formattedList as CurrencyList[]);
+      setData(formattedList as CurrencyList[]);
     } catch (err) {
       console.error("Error fetching currency list:", err);
       setError("Failed fetching currency list.");
@@ -26,8 +26,7 @@ const useFetchCurrencyList = () => {
 
   return {
     error,
-    currencyList,
-    getCurrencyList,
+    data,
   };
 };
 

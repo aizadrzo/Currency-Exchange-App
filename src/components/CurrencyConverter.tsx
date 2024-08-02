@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useFetchCurrencyList, useFetchLatestRates } from "@/hooks";
@@ -14,23 +15,38 @@ import {
   SelectGroup,
 } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Currencies } from "@/constants";
+import { LoaderCircleIcon } from "lucide-react";
+
+const ButtonLoader = () => (
+  <Button className="w-full rounded-full" disabled>
+    <LoaderCircleIcon className="w-4 h-4 mr-2 animate-spin" />
+    Loading
+  </Button>
+);
 
 const CurrencyConverter = () => {
   const {
     data: exchangeRates,
     setAmount,
     setBaseCurrency,
-    setToCurrency,
     baseCurrency,
-    toCurrency,
     amount,
+    isFetching,
   } = useFetchLatestRates();
   const { data: currencyList } = useFetchCurrencyList();
+
+  const [selectedCurrency, setSelectedCurrency] =
+    useState<keyof typeof Currencies>("USD");
+
+  const convertedAmount = exchangeRates.find(
+    ({ currency }) => currency === selectedCurrency
+  )?.rate;
 
   const form = useForm<FormValues>({
     defaultValues: {
       amount,
-      toCurrency,
+      toCurrency: selectedCurrency,
       baseCurrency,
     },
   });
@@ -38,18 +54,19 @@ const CurrencyConverter = () => {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     setAmount(data.amount);
     setBaseCurrency(data.baseCurrency);
-    setToCurrency(data.toCurrency);
+    setSelectedCurrency(data.toCurrency);
   };
+
   return (
-    <Card className="w-[360px]">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Get the Latest Rates</CardTitle>
+        <CardTitle>Latest Rates</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
-              <div className="flex flex-col gap-1 sm:flex-row">
+              <div className="flex flex-row gap-1">
                 <FormField
                   name="amount"
                   render={({ field }) => (
@@ -89,18 +106,14 @@ const CurrencyConverter = () => {
                   )}
                 />
               </div>
-              <div className="flex flex-col gap-1 sm:flex-row">
+              <div className="flex flex-row gap-1">
                 <FormField
                   name="converted"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Converted Amount</FormLabel>
+                      <FormLabel>Converted To</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          value={exchangeRates[0]?.rate}
-                          readOnly
-                        />
+                        <Input {...field} value={convertedAmount} readOnly />
                       </FormControl>
                     </FormItem>
                   )}
@@ -134,9 +147,25 @@ const CurrencyConverter = () => {
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full mt-6">
-              Convert
-            </Button>
+            <div className="p-0 mt-6">
+              <p className="text-sm">
+                For <span className="font-semibold">learning purposes</span>{" "}
+                only. Please consult a real money exchange for accurate rates.
+              </p>
+              <div className="mt-4">
+                {isFetching ? (
+                  <ButtonLoader />
+                ) : (
+                  <Button
+                    type="submit"
+                    className="w-full rounded-full"
+                    disabled={!amount}
+                  >
+                    Convert Currency
+                  </Button>
+                )}
+              </div>
+            </div>
           </form>
         </Form>
       </CardContent>

@@ -19,7 +19,7 @@ import { Currencies } from "@/constants";
 import { LoaderCircleIcon } from "lucide-react";
 
 const ButtonLoader = () => (
-  <Button className="w-full" disabled>
+  <Button className="w-full rounded-full" disabled>
     <LoaderCircleIcon className="w-4 h-4 mr-2 animate-spin" />
     Loading
   </Button>
@@ -58,9 +58,9 @@ const CurrencyConverter = () => {
   };
 
   return (
-    <Card className="w-[360px]">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Get the Latest Rates</CardTitle>
+        <CardTitle>Latest Rates</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -148,13 +148,23 @@ const CurrencyConverter = () => {
               </div>
             </div>
             <div className="p-0 mt-6">
-              {isFetching ? (
-                <ButtonLoader />
-              ) : (
-                <Button type="submit" className="w-full" disabled={!amount}>
-                  Convert
-                </Button>
-              )}
+              <p className="text-sm">
+                For <span className="font-semibold">learning purposes</span>{" "}
+                only. Please consult a real money exchange for accurate rates.
+              </p>
+              <div className="mt-4">
+                {isFetching ? (
+                  <ButtonLoader />
+                ) : (
+                  <Button
+                    type="submit"
+                    className="w-full rounded-full"
+                    disabled={!amount}
+                  >
+                    Convert Currency
+                  </Button>
+                )}
+              </div>
             </div>
           </form>
         </Form>

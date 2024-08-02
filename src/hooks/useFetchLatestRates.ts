@@ -7,14 +7,12 @@ const useFetchLatestRates = () => {
   const [amount, setAmount] = useState(100);
   const [baseCurrency, setBaseCurrency] =
     useState<keyof typeof Currencies>("EUR");
-  const [toCurrency, setToCurrency] = useState<keyof typeof Currencies>("USD");
   const [data, setData] = useState<ExchangeRates[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const params = {
     amount,
     baseCurrency,
-    toCurrency,
   };
 
   const getLatestRates = async () => {
@@ -33,16 +31,14 @@ const useFetchLatestRates = () => {
 
   useEffect(() => {
     getLatestRates();
-  }, [amount, baseCurrency, toCurrency]);
+  }, [amount, baseCurrency]);
 
   return {
     error,
     data,
     setBaseCurrency,
     setAmount,
-    setToCurrency,
     baseCurrency,
-    toCurrency,
     amount,
   };
 };

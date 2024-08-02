@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useFetchCurrencyList, useFetchLatestRates } from "@/hooks";
@@ -14,23 +15,29 @@ import {
   SelectGroup,
 } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Currencies } from "@/constants";
 
 const CurrencyConverter = () => {
   const {
     data: exchangeRates,
     setAmount,
     setBaseCurrency,
-    setToCurrency,
     baseCurrency,
-    toCurrency,
     amount,
   } = useFetchLatestRates();
   const { data: currencyList } = useFetchCurrencyList();
 
+  const [selectedCurrency, setSelectedCurrency] =
+    useState<keyof typeof Currencies>("USD");
+
+  const convertedAmount = exchangeRates.find(
+    ({ currency }) => currency === selectedCurrency
+  )?.rate;
+
   const form = useForm<FormValues>({
     defaultValues: {
       amount,
-      toCurrency,
+      toCurrency: selectedCurrency,
       baseCurrency,
     },
   });
@@ -38,7 +45,7 @@ const CurrencyConverter = () => {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     setAmount(data.amount);
     setBaseCurrency(data.baseCurrency);
-    setToCurrency(data.toCurrency);
+    setSelectedCurrency(data.toCurrency);
   };
   return (
     <Card className="w-[360px]">
@@ -49,7 +56,7 @@ const CurrencyConverter = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
-              <div className="flex flex-col gap-1 sm:flex-row">
+              <div className="flex flex-row gap-1">
                 <FormField
                   name="amount"
                   render={({ field }) => (
@@ -89,18 +96,14 @@ const CurrencyConverter = () => {
                   )}
                 />
               </div>
-              <div className="flex flex-col gap-1 sm:flex-row">
+              <div className="flex flex-row gap-1">
                 <FormField
                   name="converted"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Converted Amount</FormLabel>
+                      <FormLabel>Converted To</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          value={exchangeRates[0]?.rate}
-                          readOnly
-                        />
+                        <Input {...field} value={convertedAmount} readOnly />
                       </FormControl>
                     </FormItem>
                   )}

@@ -16,6 +16,14 @@ import {
 } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Currencies } from "@/constants";
+import { LoaderCircleIcon } from "lucide-react";
+
+const ButtonLoader = () => (
+  <Button className="w-full" disabled>
+    <LoaderCircleIcon className="w-4 h-4 mr-2 animate-spin" />
+    Loading
+  </Button>
+);
 
 const CurrencyConverter = () => {
   const {
@@ -24,6 +32,7 @@ const CurrencyConverter = () => {
     setBaseCurrency,
     baseCurrency,
     amount,
+    isFetching,
   } = useFetchLatestRates();
   const { data: currencyList } = useFetchCurrencyList();
 
@@ -47,6 +56,7 @@ const CurrencyConverter = () => {
     setBaseCurrency(data.baseCurrency);
     setSelectedCurrency(data.toCurrency);
   };
+
   return (
     <Card className="w-[360px]">
       <CardHeader>
@@ -137,9 +147,15 @@ const CurrencyConverter = () => {
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full mt-6">
-              Convert
-            </Button>
+            <div className="p-0 mt-6">
+              {isFetching ? (
+                <ButtonLoader />
+              ) : (
+                <Button type="submit" className="w-full" disabled={!amount}>
+                  Convert
+                </Button>
+              )}
+            </div>
           </form>
         </Form>
       </CardContent>

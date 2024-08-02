@@ -4,6 +4,7 @@ import { formatUrl } from "@/lib/utils";
 import { Currencies } from "../constants";
 
 const useFetchLatestRates = () => {
+  const [isFetching, setIsFetching] = useState(false);
   const [amount, setAmount] = useState(100);
   const [baseCurrency, setBaseCurrency] =
     useState<keyof typeof Currencies>("EUR");
@@ -16,6 +17,7 @@ const useFetchLatestRates = () => {
   };
 
   const getLatestRates = async () => {
+    setIsFetching(true);
     try {
       const res = await fetch(formatUrl(params));
       const data = await res.json();
@@ -27,6 +29,7 @@ const useFetchLatestRates = () => {
       console.error("Error fetching latest rates:", err);
       setError("Failed to fetch latest rates.");
     }
+    setIsFetching(false);
   };
 
   useEffect(() => {
@@ -34,6 +37,7 @@ const useFetchLatestRates = () => {
   }, [amount, baseCurrency]);
 
   return {
+    isFetching,
     error,
     data,
     setBaseCurrency,

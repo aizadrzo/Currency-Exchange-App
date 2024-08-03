@@ -15,7 +15,7 @@ import {
   SelectGroup,
 } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Currencies } from "@/constants";
+import { Currencies } from "../constants/Currencies";
 import { LoaderCircleIcon } from "lucide-react";
 
 const ButtonLoader = () => (

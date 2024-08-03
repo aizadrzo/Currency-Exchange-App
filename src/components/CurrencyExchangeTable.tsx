@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Currencies } from "@/constants";
+import { Currencies } from "../constants/Currencies";
 import { useFetchLatestRates } from "@/hooks";
 import { formatMoney } from "@/lib/utils";
 import { Input } from "./ui/input";

@@ -1,4 +1,4 @@
-import { Currencies } from "./constants";
+import { Currencies } from "./constants/Currencies";
 
 export type ExchangeRates = {
   currency: keyof typeof Currencies;

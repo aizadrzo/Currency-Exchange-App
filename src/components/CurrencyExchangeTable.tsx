@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -11,11 +12,23 @@ import { useFetchLatestRates } from "@/hooks";
 import { formatMoney } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
-import { useState } from "react";
 
 const CurrencyExchangeTable = () => {
   const { data: exchangeRates } = useFetchLatestRates();
   const [search, setSearch] = useState("");
+
+  const filteredCurrencies = useMemo(
+    () =>
+      exchangeRates.filter(({ currency }) => {
+        return search.toLowerCase() === ""
+          ? currency
+          : currency.includes(search) ||
+              currency.toLowerCase().includes(search) ||
+              Currencies[currency].includes(search) ||
+              Currencies[currency].toLowerCase().includes(search);
+      }),
+    [search, exchangeRates]
+  );
 
   return (
     <>
@@ -36,16 +49,8 @@ const CurrencyExchangeTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {exchangeRates
-            .filter(({ currency }) => {
-              return search.toLowerCase() === ""
-                ? currency
-                : currency.includes(search) ||
-                    currency.toLowerCase().includes(search) ||
-                    Currencies[currency].includes(search) ||
-                    Currencies[currency].toLowerCase().includes(search);
-            })
-            .map(({ currency, rate }) => (
+          {filteredCurrencies.length > 0 ? (
+            filteredCurrencies.map(({ currency, rate }) => (
               <TableRow key={currency}>
                 <TableCell colSpan={3}>{Currencies[currency]}</TableCell>
                 <TableCell className="text-right">{currency}</TableCell>
@@ -53,7 +58,14 @@ const CurrencyExchangeTable = () => {
                   {formatMoney(currency, rate)}
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center">
+                <p className="text-sm">No matching currencies found.</p>
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </>

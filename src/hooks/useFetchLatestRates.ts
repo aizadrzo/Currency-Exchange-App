@@ -44,6 +44,7 @@ const useFetchLatestRates = () => {
     setAmount,
     baseCurrency,
     amount,
+    getLatestRates,
   };
 };
 

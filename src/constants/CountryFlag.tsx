@@ -30,7 +30,7 @@ import {
   TRFlag,
   USFlag,
   ZAFlag,
-} from "../components/flag";
+} from "@/components/flag";
 
 export const CountryFlags = {
   AUD: <AUFlag />,

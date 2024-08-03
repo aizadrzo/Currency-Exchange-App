@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Search } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -7,13 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Currencies } from "../constants/Currencies";
+import { Currencies } from "@/constants/Currencies";
+import { CountryFlags } from "@/constants/CountryFlag";
 import { useFetchLatestRates } from "@/hooks";
 import { formatMoney } from "@/lib/utils";
 import { Input } from "./ui/input";
-import { Search } from "lucide-react";
-import AUFlag from "./flag/AUFlag";
-import { CountryFlags } from "@/constants/CountryFlag";
 
 const CurrencyExchangeTable = () => {
   const { data: exchangeRates } = useFetchLatestRates();

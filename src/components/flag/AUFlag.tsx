@@ -1,5 +1,5 @@
-const AUFlag = ({ width = 32, height = 32 }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height}>
+const AUFlag = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
     <rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#061b65" />
     <path
       d="M6.5 13.774V16h4v-2.227L13.537 16H16v-1.241L12.238 12H16V8h-2.74L16 5.991V4h-1.441L10.5 6.977V4h-4v2.794L3.243 4.405a3.997 3.997 0 0 0-1.786 1.738l2.532 1.858H1v4h3.763L1 14.761v1.24h2.464L6.5 13.775Z"

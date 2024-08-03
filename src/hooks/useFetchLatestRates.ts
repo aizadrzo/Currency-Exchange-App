@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ExchangeRates } from "../types";
 import { formatUrl } from "@/lib/utils";
-import { Currencies } from "../constants/Currencies";
+import { Currencies } from "@/constants/Currencies";
 
 const useFetchLatestRates = () => {
   const [isFetching, setIsFetching] = useState(false);

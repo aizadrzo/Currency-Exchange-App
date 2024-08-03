@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Search } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -7,11 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Currencies } from "@/constants";
+import { Currencies } from "@/constants/Currencies";
+import { CountryFlags } from "@/constants/CountryFlag";
 import { useFetchLatestRates } from "@/hooks";
 import { formatMoney } from "@/lib/utils";
 import { Input } from "./ui/input";
-import { Search } from "lucide-react";
 
 const CurrencyExchangeTable = () => {
   const { data: exchangeRates } = useFetchLatestRates();
@@ -43,7 +44,7 @@ const CurrencyExchangeTable = () => {
       <Table>
         <TableHeader className="sticky top-0">
           <TableRow>
-            <TableHead colSpan={3}>Country</TableHead>
+            <TableHead colSpan={5}>Country</TableHead>
             <TableHead className="text-right">Currency</TableHead>
             <TableHead className="text-right">Rate</TableHead>
           </TableRow>
@@ -52,7 +53,12 @@ const CurrencyExchangeTable = () => {
           {filteredCurrencies.length > 0 ? (
             filteredCurrencies.map(({ currency, rate }) => (
               <TableRow key={currency}>
-                <TableCell colSpan={3}>{Currencies[currency]}</TableCell>
+                <TableCell colSpan={5}>
+                  <div className="flex items-center gap-1">
+                    {CountryFlags[currency]}
+                    <p>{Currencies[currency]}</p>
+                  </div>
+                </TableCell>
                 <TableCell className="text-right">{currency}</TableCell>
                 <TableCell className="text-right">
                   {formatMoney(currency, rate)}

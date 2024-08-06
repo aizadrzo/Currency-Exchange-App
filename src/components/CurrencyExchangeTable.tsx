@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/table";
 import { Currencies } from "@/constants/Currencies";
 import { CountryFlags } from "@/constants/CountryFlag";
-import { useFetchLatestRates } from "@/hooks";
 import { formatMoney } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
@@ -32,8 +31,11 @@ const splitArrayIntoChunks = (array: ExchangeRates[], chunkSize: number) => {
   return chunks;
 };
 
-const CurrencyExchangeTable = () => {
-  const { data: exchangeRates } = useFetchLatestRates();
+const CurrencyExchangeTable = ({
+  exchangeRates,
+}: {
+  exchangeRates: ExchangeRates[];
+}) => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;

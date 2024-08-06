@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useFetchCurrencyList, useFetchLatestRates } from "@/hooks";
-import { FormValues } from "@/types";
+import { useFetchCurrencyList } from "@/hooks";
+import { ExchangeRates, FormValues } from "@/types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import {
@@ -18,6 +18,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Currencies } from "../constants/Currencies";
 import { LoaderCircleIcon } from "lucide-react";
 
+type TProps = {
+  amount: number;
+  baseCurrency: keyof typeof Currencies;
+  exchangeRates: ExchangeRates[];
+  isFetching: boolean;
+  setAmount: (val: number) => void;
+  setBaseCurrency: (val: keyof typeof Currencies) => void;
+};
+
 const ButtonLoader = () => (
   <Button className="w-full rounded-full" disabled>
     <LoaderCircleIcon className="w-4 h-4 mr-2 animate-spin" />
@@ -25,15 +34,14 @@ const ButtonLoader = () => (
   </Button>
 );
 
-const CurrencyConverter = () => {
-  const {
-    data: exchangeRates,
-    setAmount,
-    setBaseCurrency,
-    baseCurrency,
-    amount,
-    isFetching,
-  } = useFetchLatestRates();
+const CurrencyConverter = ({
+  amount,
+  baseCurrency,
+  exchangeRates,
+  isFetching,
+  setAmount,
+  setBaseCurrency,
+}: TProps) => {
   const { data: currencyList } = useFetchCurrencyList();
 
   const [selectedCurrency, setSelectedCurrency] =

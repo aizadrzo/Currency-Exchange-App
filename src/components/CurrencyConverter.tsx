@@ -39,7 +39,12 @@ type TProps = {
 const schema = z.object({
   amount: z.preprocess(
     (val) => Number(val),
-    z.number().positive().min(1, "Amount is required")
+    z
+      .number({
+        invalid_type_error: "Amount must be a positive number",
+      })
+      .positive("Amount must be greater than zero")
+      .min(1)
   ),
   baseCurrency: z.enum(Object.keys(Currencies) as [keyof typeof Currencies]),
   toCurrency: z.enum(Object.keys(Currencies) as [keyof typeof Currencies]),

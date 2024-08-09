@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Currencies } from "@/constants/Currencies";
 import { CountryFlags } from "@/constants/CountryFlag";
-import { formatMoney } from "@/lib/utils";
+import { cn, formatMoney } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import {
@@ -113,24 +113,54 @@ const CurrencyExchangeTable = ({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                className="cursor-pointer"
+                className={cn("cursor-pointer", {
+                  "cursor-not-allowed text-muted-foreground hover:bg-transparent hover:text-muted-foreground":
+                    currentPage === 1,
+                })}
                 onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                aria-disabled={currentPage === 1}
               />
             </PaginationItem>
-            {paginatedCurrencies.map((_, index) => (
-              <PaginationItem key={index}>
-                <PaginationLink
-                  className="cursor-pointer"
-                  isActive={index + 1 === currentPage}
-                  onClick={() => handlePageChange(index + 1)}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
+            {paginatedCurrencies.map((_, index) => {
+              const pageIndex = index + 1;
+              if (
+                pageIndex === 1 ||
+                pageIndex === currentPage ||
+                pageIndex === paginatedCurrencies.length
+              ) {
+                return (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      className="cursor-pointer"
+                      isActive={pageIndex === currentPage}
+                      onClick={() => handlePageChange(pageIndex)}
+                    >
+                      {pageIndex}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              }
+
+              if (
+                pageIndex === paginatedCurrencies.length - 1 &&
+                currentPage < paginatedCurrencies.length - 2
+              ) {
+                return <PaginationItem key={index}>...</PaginationItem>;
+              }
+
+              if (pageIndex === 2 && currentPage > 3) {
+                return <PaginationItem key={index}>...</PaginationItem>;
+              }
+
+              return null;
+            })}
+
             <PaginationItem>
               <PaginationNext
-                className="cursor-pointer"
+                className={cn("cursor-pointer", {
+                  "cursor-not-allowed text-muted-foreground hover:bg-transparent hover:text-muted-foreground":
+                    currentPage === paginatedCurrencies.length,
+                })}
                 onClick={() =>
                   handlePageChange(
                     Math.min(currentPage + 1, paginatedCurrencies.length)

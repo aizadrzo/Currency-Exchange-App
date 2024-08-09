@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search } from "lucide-react";
 import {
   Table,
@@ -7,10 +7,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "./ui/table";
 import { Currencies } from "@/constants/Currencies";
 import { CountryFlags } from "@/constants/CountryFlag";
-import { cn, formatMoney } from "@/lib/utils";
+import { cn, formatMoney, splitArrayIntoChunks } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import {
@@ -20,16 +20,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "./ui/pagination";
 import { ExchangeRates } from "@/types";
-
-const splitArrayIntoChunks = (array: ExchangeRates[], chunkSize: number) => {
-  const chunks = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-    chunks.push(array.slice(i, i + chunkSize));
-  }
-  return chunks;
-};
 
 const CurrencyExchangeTable = ({
   exchangeRates,
@@ -57,6 +49,10 @@ const CurrencyExchangeTable = ({
     () => splitArrayIntoChunks(filteredCurrencies, itemsPerPage),
     [filteredCurrencies]
   );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

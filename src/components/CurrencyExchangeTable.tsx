@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search } from "lucide-react";
 import {
   Table,
@@ -7,11 +7,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "./ui/table";
 import { Currencies } from "@/constants/Currencies";
 import { CountryFlags } from "@/constants/CountryFlag";
-import { useFetchLatestRates } from "@/hooks";
-import { formatMoney } from "@/lib/utils";
+import { cn, formatMoney, splitArrayIntoChunks } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import {
@@ -21,19 +20,14 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "./ui/pagination";
 import { ExchangeRates } from "@/types";
 
-const splitArrayIntoChunks = (array: ExchangeRates[], chunkSize: number) => {
-  const chunks = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-    chunks.push(array.slice(i, i + chunkSize));
-  }
-  return chunks;
-};
-
-const CurrencyExchangeTable = () => {
-  const { data: exchangeRates } = useFetchLatestRates();
+const CurrencyExchangeTable = ({
+  exchangeRates,
+}: {
+  exchangeRates: ExchangeRates[];
+}) => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -55,6 +49,10 @@ const CurrencyExchangeTable = () => {
     () => splitArrayIntoChunks(filteredCurrencies, itemsPerPage),
     [filteredCurrencies]
   );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -111,24 +109,54 @@ const CurrencyExchangeTable = () => {
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                className="cursor-pointer"
+                className={cn("cursor-pointer", {
+                  "cursor-not-allowed text-muted-foreground hover:bg-transparent hover:text-muted-foreground":
+                    currentPage === 1,
+                })}
                 onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                aria-disabled={currentPage === 1}
               />
             </PaginationItem>
-            {paginatedCurrencies.map((_, index) => (
-              <PaginationItem key={index}>
-                <PaginationLink
-                  className="cursor-pointer"
-                  isActive={index + 1 === currentPage}
-                  onClick={() => handlePageChange(index + 1)}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
+            {paginatedCurrencies.map((_, index) => {
+              const pageIndex = index + 1;
+              if (
+                pageIndex === 1 ||
+                pageIndex === currentPage ||
+                pageIndex === paginatedCurrencies.length
+              ) {
+                return (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      className="cursor-pointer"
+                      isActive={pageIndex === currentPage}
+                      onClick={() => handlePageChange(pageIndex)}
+                    >
+                      {pageIndex}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              }
+
+              if (
+                pageIndex === paginatedCurrencies.length - 1 &&
+                currentPage < paginatedCurrencies.length - 2
+              ) {
+                return <PaginationItem key={index}>...</PaginationItem>;
+              }
+
+              if (pageIndex === 2 && currentPage > 3) {
+                return <PaginationItem key={index}>...</PaginationItem>;
+              }
+
+              return null;
+            })}
+
             <PaginationItem>
               <PaginationNext
-                className="cursor-pointer"
+                className={cn("cursor-pointer", {
+                  "cursor-not-allowed text-muted-foreground hover:bg-transparent hover:text-muted-foreground":
+                    currentPage === paginatedCurrencies.length,
+                })}
                 onClick={() =>
                   handlePageChange(
                     Math.min(currentPage + 1, paginatedCurrencies.length)

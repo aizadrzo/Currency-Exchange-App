@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useFetchCurrencyList, useFetchLatestRates } from "@/hooks";
-import { FormValues } from "@/types";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { useForm } from "react-hook-form";
+import { useFetchCurrencyList } from "@/hooks";
+import { ExchangeRates, FormValues } from "@/types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import {
@@ -17,6 +24,31 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Currencies } from "../constants/Currencies";
 import { LoaderCircleIcon } from "lucide-react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+type TProps = {
+  amount: number;
+  baseCurrency: keyof typeof Currencies;
+  exchangeRates: ExchangeRates[];
+  isFetching: boolean;
+  setAmount: (val: number) => void;
+  setBaseCurrency: (val: keyof typeof Currencies) => void;
+};
+
+const schema = z.object({
+  amount: z.preprocess(
+    (val) => Number(val),
+    z
+      .number({
+        invalid_type_error: "Amount must be a positive number",
+      })
+      .positive("Amount must be greater than zero")
+      .min(1)
+  ),
+  baseCurrency: z.enum(Object.keys(Currencies) as [keyof typeof Currencies]),
+  toCurrency: z.enum(Object.keys(Currencies) as [keyof typeof Currencies]),
+});
 
 const ButtonLoader = () => (
   <Button className="w-full rounded-full" disabled>
@@ -25,15 +57,14 @@ const ButtonLoader = () => (
   </Button>
 );
 
-const CurrencyConverter = () => {
-  const {
-    data: exchangeRates,
-    setAmount,
-    setBaseCurrency,
-    baseCurrency,
-    amount,
-    isFetching,
-  } = useFetchLatestRates();
+const CurrencyConverter = ({
+  amount,
+  baseCurrency,
+  exchangeRates,
+  isFetching,
+  setAmount,
+  setBaseCurrency,
+}: TProps) => {
   const { data: currencyList } = useFetchCurrencyList();
 
   const [selectedCurrency, setSelectedCurrency] =
@@ -44,6 +75,7 @@ const CurrencyConverter = () => {
   )?.rate;
 
   const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
       amount,
       toCurrency: selectedCurrency,
@@ -51,7 +83,7 @@ const CurrencyConverter = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit = (data: z.infer<typeof schema>) => {
     setAmount(data.amount);
     setBaseCurrency(data.baseCurrency);
     setSelectedCurrency(data.toCurrency);
@@ -75,6 +107,11 @@ const CurrencyConverter = () => {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
+                      {form.formState.errors.amount?.message && (
+                        <FormMessage>
+                          {form.formState.errors.amount.message}
+                        </FormMessage>
+                      )}
                     </FormItem>
                   )}
                 />
@@ -156,11 +193,7 @@ const CurrencyConverter = () => {
                 {isFetching ? (
                   <ButtonLoader />
                 ) : (
-                  <Button
-                    type="submit"
-                    className="w-full rounded-full"
-                    disabled={!amount}
-                  >
+                  <Button type="submit" className="w-full rounded-full">
                     Convert Currency
                   </Button>
                 )}
